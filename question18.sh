@@ -1,21 +1,44 @@
-git fetch
-# List all branches
-git branch -r
-# Merge all branches whose names begin with ready to main
-for branch in $(git branch -r | grep ready); do
-  git checkout main
-  git merge $branch
+git fetch --all
+
+# Switch to main branch
+git checkout main
+
+# Identify and merge all branches starting with "ready" into main
+for branch in $(git branch -r | grep "ready"); do
+  # Strip 'origin/' from the branch name
+  branch_name=$(echo $branch | sed 's/origin\///')
+  
+  # Merge the branch into main
+  git merge $branch_name -m "Merge branch $branch_name into main"
+  
+  # If there are conflicts, resolve them manually
+  # Assuming conflicts are resolved manually here for example
+  # echo "Resolved content" > conflicting-file.txt
+  # git add conflicting-file.txt
+  # git commit -m "Resolve conflicts from $branch_name"
 done
-# Resolve any merge conflicts manually, if any
-# Add and commit the resolved files
-git add .
-git commit -m "Merge ready branches with main and resolve conflicts"
-# Delete those branches
-for branch in $(git branch -r | grep ready); do
-  git branch -d $branch
+
+# Delete merged "ready" branches
+for branch in $(git branch -r | grep "ready"); do
+  # Strip 'origin/' from the branch name
+  branch_name=$(echo $branch | sed 's/origin\///')
+  
+  # Delete the branch
+  git push origin --delete $branch_name
+  git branch -d $branch_name
 done
-# Update all branches whose names begin with update
-for branch in $(git branch -r | grep update); do
-  git checkout $branch
+
+# Identify and rebase all branches starting with "update" onto the latest main
+for branch in $(git branch -r | grep "update"); do
+  # Strip 'origin/' from the branch name
+  branch_name=$(echo $branch | sed 's/origin\///')
+  
+  # Checkout the branch
+  git checkout $branch_name
+  
+  # Rebase onto the latest main
   git rebase main
+  
+  # Push the updated branch
+  git push origin $branch_name
 done
