@@ -1,22 +1,14 @@
-git checkout -b assignment-branch
-
+git checkout -b new-branch
 # Remove all .sh files
 rm *.sh
-
-# Stage the removal of .sh files
+# Add removal to staging
 git add .
-
-# Commit the removal
+# Commit removal
 git commit -m "Remove all .sh files"
-
-# Create a new text file named file13.txt
+# Create and add file13.txt
 echo "This is file13.txt" > file13.txt
-
-# Stage the new file
 git add file13.txt
-
-# Commit the new file
+# Commit new file
 git commit -m "Add file13.txt"
-
-# Push the new branch to GitHub
-git push origin assignment-branch
+# Push new branch
+git push origin new-branch
